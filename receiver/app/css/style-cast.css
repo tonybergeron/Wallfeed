@@ -1,0 +1,22 @@
+body {
+  overflow:hidden;
+}
+.main {
+  height:720PX;
+  width:1280PX;
+  text-align:center;
+  border:0px solid silver;
+  display: table-cell;
+  padding: 20px 40px 15px;
+  vertical-align:top;
+  border: 1px solid black;
+  color:#FFFFFF;
+  background-color:#000000;
+  font-weight:bold;
+  font-family:Verdana, Geneva, sans-serif;
+  font-size:34px;
+}
+
+.content-text {
+  font-size: 16px;
+}

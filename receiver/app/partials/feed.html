@@ -1,0 +1,8 @@
+<div class="row-fluid" style="text-align:left;">
+    <ul class="list-unstyled content-text" style="text-align:left;">
+        <li ng-repeat="feed in feeds | filter:filterText">                    
+        	<h4>{{feed.title}}</h4>
+        </li>  
+    </ul>
+    <span style="font-style:italic; font-size:12px;">Last Updated: {{ lastUpdated | date:'mediumTime' }}</span>   
+</div>

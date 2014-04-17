@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" ng-app="wallfeed">
+<head>
+  <meta charset="utf-8">
+  <title>Wallfeed</title>
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <link rel="stylesheet" href="css/app.css"/>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/style-cast.css"/>
+</head>
+<body>
+  <!--
+  <ul class="menu">
+    <li><a ui-sref="state1">state1</a></li>
+    <li><a ui-sref="state2">state2</a></li>
+  </ul>
+  -->
+
+  <div class="main" ui-view></div>
+
+  <!--<div>Angular seed app: v<span app-version></span></div>-->
+
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+  -->
+
+  <!-- ChromeCast should be a factory sometime -->
+  <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+
+  <script src="components/angular/angular.js"></script>
+  <script src="components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/controllers.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/directives.js"></script>
+
+  <script src="js/feedService.js"></script>
+  <script src="js/chromecast.js"></script>
+</body>
+</html>
