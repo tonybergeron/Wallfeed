@@ -1,23 +1,20 @@
 <!-- metra.html -->
 <h3 style="text-align:left">Ravenswood to OTC</h3>
 <div class="row-fluid" style="text-align:left; font-size: 14px;">
+    <span style="font-style:italic">Updated At:  {{lastUpdated | date:'mediumTime'}}</span>
     <ul class="list-unstyled">
         <li ng-repeat="train in times | filter:filterText" ng-show="{{train.time_to_arrival < 2000}}"> 
             <!--<h5>{{ train.train_num }}</h5>-->
-			<h4>
-				<span class="badge badge-warning content-text" style="font-size: 1.1em">{{train.time_to_arrival}} min</span>
-			</h4>
+			<p>
+                <span class="badge badge-warning content-text" style="font-size: 1.5em; width: 120px">{{train.time_to_arrival}} min</span>
+                {{train.train_num}}: {{train.estimated_dpt_time | date:'mediumTime'}}
+			</p>
 
-            Arrives at: {{train.estimated_dpt_time | date:'mediumTime'}}
             <!--
             Scheduled: {{train.scheduled_dpt_time | date:'mediumTime'}}
-            <br>
             Estimated: {{train.estimated_dpt_time | date:'mediumTime'}}
-            <br>
-            <br>
             -->
         </li>
         <br>
-        <span style="font-style:italic">Updated At:  {{lastUpdated | date:'mediumTime'}}   </span>
     </ul>
 </div>

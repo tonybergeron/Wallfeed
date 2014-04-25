@@ -7,12 +7,17 @@
 var chromecast = angular.module('wallfeed.chromecast', []);
 
 
-//Chromecase Factory for Cast Methods
+//Chromecast Factory for Cast Methods
 chromecast.factory('Chromecast', ['$state', function($state) {
 
   var castReceiverManager;
   var messageBus;
 
+  var data = {
+    textFromUser: 'Write a note!'
+  };
+
+  //Return Object
   var chromecast = {};
 
   chromecast.test = function() {
@@ -20,7 +25,7 @@ chromecast.factory('Chromecast', ['$state', function($state) {
   };
 
   chromecast.initialize = function() {
-    cast.receiver.logger.setLevelValue(0);
+    cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.NONE);
     castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
     console.log('Starting Receiver Manager');
 
@@ -61,9 +66,42 @@ chromecast.factory('Chromecast', ['$state', function($state) {
       console.log('Message [' + event.senderId + ']: ' + event.data);
       // display the message from the sender
 
-      displayText(event.data);
+      //Expecting an object and a type with data
+      //example
+      /*
+      data: {
+        type: 'state',
+        state: 'dashboard.all'
+      }
+      //or
+      data: {
+        type: 'note',
+        text: 'test text from user'
+      }
+      */
 
-      // inform all senders on the CastMessageBus of the incoming message event
+      //====================================================================================================
+      //Parse the incoming data
+      var eventData = JSON.parse(event.data);
+
+      console.log("the sent data is: " + eventData);
+      console.log("the message type is: " + eventData.type);
+
+      if(eventData.type == "state") {
+        chromecast.changeState(eventData.state);
+      }
+      else if(eventData.type == "note") {
+        chromecast.displayText(eventData.text);
+      } 
+      else {
+        //unknown request
+      }
+      //==================================================
+
+
+
+
+      // Inform all senders on the CastMessageBus of the incoming message event
       // sender message listener will be invoked
       messageBus.send(event.senderId, event.data);
     }
@@ -75,14 +113,26 @@ chromecast.factory('Chromecast', ['$state', function($state) {
     console.log('Receiver Manager started');
   };
 
+
+  //====================================================================================================
   // utility function to display the text message in the input field
   chromecast.displayText = function(text) {
-    console.log(text);
-    document.getElementById("message").innerHTML = text;
-    castReceiverManager.setApplicationState(text);
+    console.log('Note sent from user: ' + text);
+    data.textFromUser = text;
+    //castReceiverManager.setApplicationState(text);
   };
 
-  //TODO: Change state by user
+  chromecast.changeState = function(state) {
+    console.log('State change sent from user: ' + state);
+    $state.go(state);
+    castReceiverManager.setApplicationState(state);
+  };
+  //==================================================
+
+  chromecast.getData = function() {
+    return data;
+  };
+
 
   return chromecast;
 }]);

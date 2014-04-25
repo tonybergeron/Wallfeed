@@ -9,6 +9,7 @@
     "angular": "1.2.x",
     "angular-ui-router": "0.2.x",
     "angular-loader": "1.2.x",
-    "angular-mocks": "~1.2.15"
+    "angular-mocks": "~1.2.15",
+    "moment": "2.6.x"
   }
 }

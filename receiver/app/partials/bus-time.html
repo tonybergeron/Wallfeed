@@ -1,0 +1,19 @@
+<div class="row" style="text-align:left; padding: 0px; margin: 0px">
+
+	<!-- {{route}}: {{stop}} -->
+	<div ng-show="busTimes.length > 0">
+		<div ng-repeat="item in busTimes | filter: { rt: route, stpid: stop }" ng-show="$first">
+		    <div style="font-size:1.2em;">{{ item.rtdir }}</div>
+		</div>
+
+	    <ul class="list-unstyled content-text" style="text-align:left;">
+	        <li ng-repeat="time in busTimes | filter: { rt: route, stpid: stop }"> 
+	        	<p>
+	        		<span class="badge badge-warning content-text" style="font-size: 1.5em; width: 140px">
+	        			{{differenceInMinutes(time.prdtm, time.tmstmp) - 1}} min
+	        		</span>
+	        	</p>         
+	        </li>  
+	    </ul>
+	</div> 
+</div>	
