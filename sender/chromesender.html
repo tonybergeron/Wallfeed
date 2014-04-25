@@ -168,14 +168,6 @@ function onStopAppSuccess() {
   appendMessage('onStopAppSuccess');
 }
 
-/**
- * handler for the transcribed text from the speech input
- * @param {string} words A transcibed speech string
- */
-function transcribe(words) {
-  sendMessage(words);
-}
-
 
 /**
  * send a message to the receiver using the custom namespace
@@ -194,13 +186,64 @@ function sendMessage(message) {
   }
 }
 
+/**
+ * utility function to send a note!
+ */
+function sendNote() {
+  var payload = {
+    type: 'note',
+    text: document.getElementById("noteInput").value
+  };
+
+  console.log(payload);
+
+  sendMessage(payload);
+}
+
+/**
+ * utility function to change the state!
+ */
+function sendState() {
+  var payload = {
+    type: 'state',
+    state: document.getElementById("stateInput").value
+  };
+
+  console.log(payload);
+
+  sendMessage(payload);
+}
+
 </script>
 
 </head>
 <body>
-  Start the cast and let the magic happen
+  <div style="text-align:center">
+    <span style="font-size: 2em">
+      <h1>WallCast</h1>
+      <p>Start the cast, let the magic happen...</p>
+    </span>
+
+    <h2>Change Note:</h2>
+    <input id="noteInput" class="border" style="text-align:center" type="text" size="22" maxlength="20"/>
+    <br>
+    <input type="button" value="Change Note" onclick="sendNote()"/>
+
+    <br>
+    <br>
+    <br>
+
+
+    <h2>Change State:</h2>
+    <input id="stateInput" class="border" style="text-align:center" value="dashboard.all" type="text" size="20" maxlength="20"/>
+    <br>
+    <input type="button" value="Change State" onclick="sendState()"/>
+
+
+  </div>
 
   <!-- Debbugging output -->
+  <br>
   <div style="margin:10px; visibility:visible;">
     <textarea rows="20" cols="70" id="debugmessage">
     </textarea>

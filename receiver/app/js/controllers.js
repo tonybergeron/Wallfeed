@@ -2,24 +2,104 @@
 
 /* Controllers */
 
-angular.module('wallfeed.controllers', ['wallfeed.feed'])
+angular.module('wallfeed.controllers', ['wallfeed.feed', 'wallfeed.chromecast', 'wallfeed.ctaTracker'])
+  
+
+  //==================================================
+  // Entry Controller
+  //==================================================
   .controller('entryCtrl', ['$state', function($state) {
   	setTimeout(function() {
   		//$state.go('dashboard.all');
   	}, 5000);
   }])
-  .controller('redditCtrl', ['$scope', '$timeout', 'FeedService', function ($scope, $timeout, Feed) {
 
-  }])
-  .controller('cnnCtrl', ['$scope', '$timeout', 'FeedService', function ($scope, $timeout, Feed) {  
+  //==================================================
+  // User Note: Note Info from User through Chromecast
+  //==================================================
+  .controller('noteCtrl', ['$scope', '$interval', 'Chromecast', function ($scope, $interval, chromecast) {
+  	
+  	var data = {
+  		textFromUser: ''
+  	};
 
-  }])
-  .controller('ctaTrainCtrl', ['$scope', function ($scope) {  
+  	$scope.chromecastData = data;
 
+  	//Initialize and Repeat
+  	$scope.chromecastData = chromecast.getData();
+  	$interval(function() {
+  		$scope.chromecastData = chromecast.getData();
+  	}, 1000);
   }])
-  .controller('ctaBusCtrl', ['$scope', function ($scope) {  
 
+  //==================================================
+  // CTA Train Times
+  //==================================================
+  .controller('ctaTrainCtrl', ['$scope', '$timeout', 'CTATrainService', function ($scope, $timeout, CTATrainService) { 
+  	$scope.lastUpdated = '';
+  	$scope.stop = '30018,30019';
+  	$scope.trainTimes = [];
+
+	function getArrivals(e) {
+		//console.log('GET PREDICTIONS CTA TRAIN');
+		var promise = CTATrainService.getArrivals($scope.stop);
+
+		promise.then(function(res){
+			$scope.lastUpdated = Date.now();
+		    //console.log('Response from promise');
+		    //console.log(res);
+		    $scope.trainTimes = res['ctatt'].eta;
+		    //console.log($scope.trainTimes);
+		});
+	}
+
+	function updateLater() {
+	    $timeout(function() {
+	      getArrivals();
+          updateLater(); // schedule another update
+	    }, 30000);
+    }
+
+	getArrivals();
+    updateLater();
   }])
+
+  //==================================================
+  // CTA Bus Times
+  //==================================================
+  .controller('ctaBusCtrl', ['$scope', '$timeout', 'CTABusService', function ($scope, $timeout, CTABusService) { 
+  	$scope.lastUpdated = '';
+  	$scope.route = '22';
+  	$scope.stop = '1937,1811';
+  	$scope.busTimes = [];
+
+	function getPredictions(e) {
+		//console.log('GET PREDICTIONS CTA BUS');
+		var promise = CTABusService.getPredictions($scope.route, $scope.stop);
+
+		promise.then(function(res){
+			$scope.lastUpdated = Date.now();
+		    //console.log('Response from promise');
+		    //console.log(res);
+		    $scope.busTimes = res['bustime-response'].prd;
+		    //console.log($scope.busTimes);
+		});
+	}
+
+	function updateLater() {
+	    $timeout(function() {
+	      getPredictions();
+          updateLater(); // schedule another update
+	    }, 30000);
+    }
+
+	getPredictions();
+    updateLater();
+  }])
+
+  //==================================================
+  // Weather Info: Handles Weather Forecast.io
+  //==================================================
   .controller('weatherCtrl', ['$scope', '$timeout', function ($scope, $timeout) {  
   	
   	$scope.lastUpdated = '';
@@ -48,15 +128,25 @@ angular.module('wallfeed.controllers', ['wallfeed.feed'])
 
 
   }])
+  .controller('youtubeCtrl', ['$scope', function ($scope) {  
+
+  }])
+  .controller('youtubeFullCtrl', ['$scope', function ($scope) {  
+
+  }])
+
+  //==================================================
+  // Video Player: Plays Local Videos
+  //==================================================
   .controller('videoCtrl', ['$scope', function ($scope) {  
   	//on the end of the video, load next video
 
   	$scope.currentVideo = '';
 
   	$scope.fileList = [
-  		'http://192.168.1.100/videos/sample2.mp4',
-  		'http://192.168.1.100/videos/sample3.mp4',
-  		'http://192.168.1.100/videos/sample4.mp4'
+  		'http://192.168.134.132/videos/sample2.mp4',
+  		'http://192.168.134.132/videos/sample3.mp4',
+  		'http://192.168.134.132/videos/sample4.mp4'
   	];
   	$scope.nextVideoIndex = 0;
 
@@ -76,9 +166,6 @@ angular.module('wallfeed.controllers', ['wallfeed.feed'])
 	    return path;
 	  };
 
-	  //Load in the videos to the stash
-	  //function loadVideos(data) {
-	    //var parsed = JSON.parse(data);
 	  function playVideos() {
 
 		$scope.nextVideoIndex = 0;
@@ -99,6 +186,11 @@ angular.module('wallfeed.controllers', ['wallfeed.feed'])
 	  playVideos();
 
   }])
+
+  
+  //==================================================
+  // Metra Times
+  //==================================================
   .controller('metraCtrl', ['$scope', '$timeout', '$http', function ($scope, $timeout, $http) {  
   	$scope.times = [];
   	$scope.lastUpdated = '';
@@ -224,8 +316,13 @@ angular.module('wallfeed.controllers', ['wallfeed.feed'])
 	    }, 30000);
     }
 
-	
 
+  }])
+  
+  .controller('redditCtrl', ['$scope', '$timeout', 'FeedService', function ($scope, $timeout, Feed) {
+
+  }])
+  .controller('cnnCtrl', ['$scope', '$timeout', 'FeedService', function ($scope, $timeout, Feed) {  
 
   }]);
 
