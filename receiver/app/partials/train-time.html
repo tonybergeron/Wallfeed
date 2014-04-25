@@ -1,0 +1,21 @@
+<div class="row" style="text-align:left; padding: 0px; margin: 0px">
+
+	<!-- {{route}}: {{stop}} -->
+    <div ng-show="trainTimes.length > 0">
+    	<div ng-repeat="item in trainTimes | filter: { stpId: stop }" ng-show="$first">
+    	    <div style="font-size:1.2em;">{{ item.stpDe }}</div>
+    	</div>
+
+        <ul class="list-unstyled content-text" style="text-align:left;">
+            <li ng-repeat="time in trainTimes | filter: { stpId: stop }"> 
+            	<p>
+            		<span class="badge badge-warning content-text" style="font-size: 1.5em; width: 140px">
+            			{{differenceInMinutes(time.arrT, time.prdt) - 1}} min
+            		</span>
+            	</p>         
+            </li>  
+        </ul>
+    </div>
+    <!-- TODO: Flags for delayed to change the CSS of the time-->
+
+</div>	
