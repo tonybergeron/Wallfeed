@@ -33,12 +33,18 @@ angular.module('wallfeed.directives', []).
                 scope.lastUpdated = Date.now();
   	        });
   	    }
-  	    loadFeed();
-  	    $timeout(function() {
-  	    	loadFeed();
-        }, 120000);
 
+        function updateLater() {
+            setTimeout(function() {
+              loadFeed(); // update DOM
+              updateLater(); // schedule another update
+            }, 120000);
+        }
+        
+        loadFeed();
+        updateLater();
       }
+
     };
   }])
 
@@ -63,6 +69,7 @@ angular.module('wallfeed.directives', []).
 	            }, 1000);
 	        }
 	        
+          updateTime(); 
 	        updateLater();
     	}
     };
